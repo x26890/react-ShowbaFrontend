@@ -122,8 +122,9 @@ const StaffDashboard = () => {
   return (
     <div className="container-fluid py-4 min-vh-100" style={{ backgroundColor: COLORS.softWhite }}>
       <div className="container">
-        <div className="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm" style={{ borderLeft: `8px solid ${COLORS.themeBlue}` }}>
-          <div>
+        {/* 頂部導覽 - 手機版自動調整間距 */}
+        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 bg-white p-3 rounded shadow-sm" style={{ borderLeft: `8px solid ${COLORS.themeBlue}` }}>
+          <div className="mb-3 mb-md-0">
             <h2 className="mb-0 fw-bold" style={{ color: COLORS.themeBlue }}>🏪 貨架位置管理系統</h2>
             <small className="text-muted">目前登入：{realName} ({userBranch})</small>
           </div>
@@ -137,15 +138,14 @@ const StaffDashboard = () => {
           </div>
           <div className="card-body" style={{ backgroundColor: '#fff' }}>
             <form onSubmit={handleSubmit} className="row g-3">
-              <div className="col-md-2">
+              <div className="col-12 col-md-2">
                 <label className="form-label fw-bold">樓層</label>
                 <select className="form-select" value={formData.floor} onChange={e => setFormData({...formData, floor: e.target.value})}>
                   {[1,2,3,4,5].map(f => <option key={f} value={f}>{f}F</option>)}
                 </select>
               </div>
 
-              {/* 修改後的位置下拉式選單 */}
-              <div className="col-md-3">
+              <div className="col-12 col-md-3">
                 <label className="form-label fw-bold">位置</label>
                 <select 
                   className="form-select" 
@@ -171,7 +171,7 @@ const StaffDashboard = () => {
               </div>
 
               {!isSpecialLocation && (
-                <div className="col-md-2">
+                <div className="col-12 col-md-2">
                   <label className="form-label fw-bold">側邊</label>
                   <select className="form-select" value={formData.side} onChange={e => setFormData({...formData, side: e.target.value})}>
                     <option value="左">左側</option>
@@ -190,18 +190,18 @@ const StaffDashboard = () => {
                 </div>
               )}
 
-              <div className={isSpecialLocation ? "col-md-7" : "col-md-5"}>
+              <div className={isSpecialLocation ? "col-12 col-md-7" : "col-12 col-md-5"}>
                 <label className="form-label fw-bold">品項清單</label>
                 <input type="text" className="form-control" value={formData.item_list} onChange={e => setFormData({...formData, item_list: e.target.value})} required />
               </div>
 
-              <div className="col-md-4">
+              <div className="col-12 col-md-4">
                 <label className="form-label fw-bold">上傳照片</label>
                 <input type="file" className="form-control" onChange={handleFileChange} accept="image/*" />
               </div>
 
               {preview && (
-                <div className="col-md-12">
+                <div className="col-12">
                   <div className="position-relative d-inline-block p-2 bg-white border rounded shadow-sm">
                     <img src={preview} alt="preview" style={{ maxHeight: '150px' }} className="rounded" />
                     <button 
@@ -217,9 +217,22 @@ const StaffDashboard = () => {
                 </div>
               )}
 
-              <div className="col-12 text-end">
-                {isEditing && <button type="button" className="btn btn-secondary me-2" onClick={resetForm}>取消修改</button>}
-                <button type="submit" className="btn px-5 fw-bold text-white" style={{ backgroundColor: COLORS.themeBlue }}>
+              {/* 按鈕區域：手機版滿版，電腦版靠右 */}
+              <div className="col-12 text-md-end d-flex flex-column d-md-block">
+                {isEditing && (
+                  <button 
+                    type="button" 
+                    className="btn btn-secondary me-md-2 mb-2 mb-md-0 fw-bold" 
+                    onClick={resetForm}
+                  >
+                    取消修改
+                  </button>
+                )}
+                <button 
+                  type="submit" 
+                  className="btn px-5 fw-bold text-white shadow-sm" 
+                  style={{ backgroundColor: COLORS.themeBlue }}
+                >
                   {isEditing ? '更新資料' : '確認新增'}
                 </button>
               </div>
@@ -234,11 +247,11 @@ const StaffDashboard = () => {
             <table className="table table-hover align-middle mb-0">
               <thead className="table-light">
                 <tr>
-                  <th style={{ width: '100px' }}>圖片</th>
-                  <th style={{ width: '80px' }}>樓層</th>
-                  <th style={{ width: '150px' }}>位置</th>
-                  <th>品項內容</th>
-                  <th className="text-center" style={{ width: '120px' }}>操作</th>
+                  <th style={{ minWidth: '80px' }}>圖片</th>
+                  <th style={{ minWidth: '60px' }}>樓層</th>
+                  <th style={{ minWidth: '120px' }}>位置</th>
+                  <th style={{ minWidth: '150px' }}>品項內容</th>
+                  <th className="text-center" style={{ minWidth: '120px' }}>操作</th>
                 </tr>
               </thead>
               <tbody>
@@ -254,7 +267,7 @@ const StaffDashboard = () => {
                     <td><span className="badge" style={{ backgroundColor: COLORS.accentYellow, color: '#333' }}>{item.floor}F</span></td>
                     <td>
                       <span className="fw-bold">{item.location}</span>
-                      {!isNaN(Number(item.location)) && <span className="ms-1 text-muted">({item.side})</span>}
+                      {!isNaN(Number(item.location)) && <span className="ms-1 text-muted d-block d-md-inline">({item.side})</span>}
                     </td>
                     <td className="text-wrap">{item.item_list}</td>
                     <td className="text-center">
