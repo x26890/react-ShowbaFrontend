@@ -93,7 +93,6 @@ const PublicView = () => {
                 <div className="col-12" key={item.id}>
                   <div className="card h-100 shadow-sm border-0 overflow-hidden">
                     <div className="d-flex align-items-center p-3">
-                      {/* 圖片路徑修正：補上 BASE_URL 並換上更穩定的佔位圖服務 */}
                       <img 
                         src={
                           item.image_url 
@@ -113,9 +112,12 @@ const PublicView = () => {
                         <div className="d-flex justify-content-between align-items-start">
                           <div>
                             <span className="badge bg-primary mb-2">{item.floor}F</span>
+                            {/* 修改位置顯示邏輯：判斷是否為特殊區域字串 */}
                             <h5 className="fw-bold mb-1">
-                              第 {item.location} 排 
-                              {isNaN(Number(item.location)) ? "" : ` (${item.side}側)`}
+                              {isNaN(Number(item.location)) 
+                                ? item.location 
+                                : `第 ${item.location} 排 (${item.side}側)`
+                              }
                             </h5>
                           </div>
                         </div>
