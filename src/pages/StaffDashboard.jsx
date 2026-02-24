@@ -27,7 +27,7 @@ const StaffDashboard = () => {
   const [preview, setPreview] = useState(null);
   const [imageDeleted, setImageDeleted] = useState(false); // 標記圖片是否被手動刪除
 
-  // 修改判斷邏輯：如果是數字則顯示側邊選單，如果是文字則隱藏
+  // 邏輯：如果是數字則顯示側邊選單，如果是文字（特殊位置）則隱藏
   const isSpecialLocation = isNaN(Number(formData.location));
 
   // 配色定義
@@ -122,7 +122,6 @@ const StaffDashboard = () => {
   return (
     <div className="container-fluid py-4 min-vh-100" style={{ backgroundColor: COLORS.softWhite }}>
       <div className="container">
-        {/* 頂部標題 */}
         <div className="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm" style={{ borderLeft: `8px solid ${COLORS.themeBlue}` }}>
           <div>
             <h2 className="mb-0 fw-bold" style={{ color: COLORS.themeBlue }}>🏪 貨架位置管理系統</h2>
@@ -144,27 +143,31 @@ const StaffDashboard = () => {
                   {[1,2,3,4,5].map(f => <option key={f} value={f}>{f}F</option>)}
                 </select>
               </div>
-              
-              {/* 修改位置欄位：加上 list 屬性連接 datalist */}
+
+              {/* 修改後的位置下拉式選單 */}
               <div className="col-md-3">
-                <label className="form-label fw-bold">位置 (可選或自填)</label>
-                <input 
-                  type="text" 
-                  className="form-control" 
-                  list="location-options"
+                <label className="form-label fw-bold">位置</label>
+                <select 
+                  className="form-select" 
                   value={formData.location} 
                   onChange={e => setFormData({...formData, location: e.target.value})} 
-                  placeholder="請輸入或選擇位置"
-                  required 
-                />
-                <datalist id="location-options">
-                  {[...Array(20).keys()].map(i => <option key={i+1} value={i+1} />)}
-                  <option value="底部橫排" />
-                  <option value="外圍走道" />
-                  <option value="8號對面" />
-                  <option value="2樓門" />
-                  <option value="最右側靠牆" />
-                </datalist>
+                  required
+                >
+                  <optgroup label="一般排數">
+                    {[...Array(30).keys()].map(i => (
+                      <option key={i+1} value={i+1}>{i+1} 號</option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="特殊區域">
+                    <option value="底部橫排">底部橫排</option>
+                    <option value="外圍走道">外圍走道</option>
+                    <option value="8號對面">8號對面</option>
+                    <option value="樓梯">樓梯</option>
+                    <option value="2樓門">2樓門</option>
+                    <option value="最右側靠牆">最右側靠牆</option>
+                    <option value="最左側靠牆">最左側靠牆</option>
+                  </optgroup>
+                </select>
               </div>
 
               {!isSpecialLocation && (
@@ -172,12 +175,21 @@ const StaffDashboard = () => {
                   <label className="form-label fw-bold">側邊</label>
                   <select className="form-select" value={formData.side} onChange={e => setFormData({...formData, side: e.target.value})}>
                     <option value="左">左側</option>
+                    <option value="左前">左前</option>
+                    <option value="左後">左後</option>
                     <option value="右">右側</option>
+                    <option value="右前">右前</option>
+                    <option value="右後">右後</option>
+                    <option value="前方">前方</option>
+                    <option value="上方">上方</option>
+                    <option value="下方">下方</option>
+                    <option value="最底">最底</option>
+                    <option value="前右轉角">前右轉角</option>   
                     <option value="無">無</option>
                   </select>
                 </div>
               )}
-              
+
               <div className={isSpecialLocation ? "col-md-7" : "col-md-5"}>
                 <label className="form-label fw-bold">品項清單</label>
                 <input type="text" className="form-control" value={formData.item_list} onChange={e => setFormData({...formData, item_list: e.target.value})} required />
@@ -224,7 +236,7 @@ const StaffDashboard = () => {
                 <tr>
                   <th style={{ width: '100px' }}>圖片</th>
                   <th style={{ width: '80px' }}>樓層</th>
-                  <th style={{ width: '180px' }}>位置</th>
+                  <th style={{ width: '150px' }}>位置</th>
                   <th>品項內容</th>
                   <th className="text-center" style={{ width: '120px' }}>操作</th>
                 </tr>
