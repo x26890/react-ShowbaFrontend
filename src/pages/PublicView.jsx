@@ -48,21 +48,23 @@ const PublicView = () => {
       const isASpecial = isNaN(Number(a.location));
       const isBSpecial = isNaN(Number(b.location));
 
-      // 1. 特殊區域優先 (文字排在數字前面)
+      // 1. 第一層排序：類別 (特殊區域 vs 一般數字)
+      // 如果 a 是特殊區域，b 是數字，a 優先 (-1)
       if (isASpecial && !isBSpecial) return -1;
+      // 如果 a 是數字，b 是特殊區域，b 優先 (1)
       if (!isASpecial && isBSpecial) return 1;
 
-      // 2. 如果兩者都是特殊區域，按名稱排序
-      if (isASpecial && isBSpecial) {
-        return a.location.localeCompare(b.location);
-      }
-
-      // 3. 如果都是一般排數 (數字)，先比樓層 (1F -> 2F)
+      // 2. 第二層排序：同類別內，按樓層排 (1F -> 2F)
       if (a.floor !== b.floor) {
         return a.floor - b.floor;
       }
 
-      // 4. 同樓層、同為數字排數時，按數字大小排 (1號 -> 2號)
+      // 3. 第三層排序：同類別且同樓層，按內容排
+      if (isASpecial && isBSpecial) {
+        // 特殊區域按文字筆劃
+        return a.location.localeCompare(b.location);
+      }
+      // 一般貨架按數字大小
       return Number(a.location) - Number(b.location);
     });
 
