@@ -25,7 +25,6 @@ const PublicView = () => {
   const fetchPublicData = async (branchName) => {
     try {
       setLoading(true);
-      // 修改為雲端 API 位址
       const res = await axios.get(`${API_URL}?branch=${branchName}`);
       setShelves(res.data);
     } catch (err) {
@@ -35,14 +34,37 @@ const PublicView = () => {
     }
   };
 
-  const filteredShelves = shelves.filter(item => {
-    const searchLower = searchTerm.toLowerCase();
-    return (
-      item.item_list?.toLowerCase().includes(searchLower) ||
-      item.location?.toLowerCase().includes(searchLower) ||
-      item.floor?.toString().includes(searchLower)
-    );
-  });
+  // --- 排序與過濾邏輯 ---
+  const filteredShelves = shelves
+    .filter(item => {
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        item.item_list?.toLowerCase().includes(searchLower) ||
+        item.location?.toLowerCase().includes(searchLower) ||
+        item.floor?.toString().includes(searchLower)
+      );
+    })
+    .sort((a, b) => {
+      const isASpecial = isNaN(Number(a.location));
+      const isBSpecial = isNaN(Number(b.location));
+
+      // 1. 特殊區域優先 (文字排在數字前面)
+      if (isASpecial && !isBSpecial) return -1;
+      if (!isASpecial && isBSpecial) return 1;
+
+      // 2. 如果兩者都是特殊區域，按名稱排序
+      if (isASpecial && isBSpecial) {
+        return a.location.localeCompare(b.location);
+      }
+
+      // 3. 如果都是一般排數 (數字)，先比樓層 (1F -> 2F)
+      if (a.floor !== b.floor) {
+        return a.floor - b.floor;
+      }
+
+      // 4. 同樓層、同為數字排數時，按數字大小排 (1號 -> 2號)
+      return Number(a.location) - Number(b.location);
+    });
 
   return (
     <div className="container-fluid min-vh-100 bg-light py-4">
@@ -112,7 +134,6 @@ const PublicView = () => {
                         <div className="d-flex justify-content-between align-items-start">
                           <div>
                             <span className="badge bg-primary mb-2">{item.floor}F</span>
-                            {/* 修改位置顯示邏輯：判斷是否為特殊區域字串 */}
                             <h5 className="fw-bold mb-1">
                               {isNaN(Number(item.location)) 
                                 ? item.location 
