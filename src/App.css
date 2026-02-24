@@ -1,0 +1,76 @@
+:root {
+  --primary-red: #FE4A49;    /* 主色：按鈕、刪除 */
+  --accent-yellow: #FED766;  /* 強調色：標籤、警告 */
+  --theme-blue: #009FB7;     /* 輔助色：導覽列、更新 */
+  --light-gray: #E6E6EA;     /* 背景、框線 */
+  --soft-white: #F4F4F8;     /* 內容區背景 */
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+
+
+body {
+  background-color: var(--soft-white) !important;
+}
+
+/* 自定義按鈕樣式 */
+.btn-theme-blue {
+  background-color: var(--theme-blue);
+  color: white;
+}
+.btn-theme-blue:hover {
+  background-color: #00899e;
+  color: white;
+}
+
+.text-primary-red {
+  color: var(--primary-red) !important;
+}
+
+.bg-accent-yellow {
+  background-color: var(--accent-yellow) !important;
+  color: #333 !important;
+}
